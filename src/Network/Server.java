@@ -1,11 +1,21 @@
+package Network;
+
+import Graphics.Window;
+import Numbers.Login;
+
 import java.io.*;
-import java.lang.reflect.Array;
 import java.util.*;
 import java.net.*;
 
-// Server class
+// Network.Server class
 public class Server
 {
+    public static Window gui;
+
+    public Server(){
+
+       gui = new Window("SERVER");
+    }
 
     // Vector to store active clients
     static Vector<ClientHandler> ar = new Vector<>();
@@ -19,6 +29,8 @@ public class Server
     public static void main(String[] args) throws IOException
     {
         // server is listening on port 1234
+        new Server();
+
         ServerSocket ss = new ServerSocket(40000);
 
         Socket s;
@@ -28,6 +40,7 @@ public class Server
         ll.add(new Login("testid", "testpw"));
         ll.add(new Login("user","password"));
         // running infinite loop for getting
+
         // client request
         while (true)
         {
@@ -45,7 +58,7 @@ public class Server
                 System.out.println("Creating a new handler for this client...");
 
                 // Create a new handler object for handling this request.
-                ClientHandler mtch = new ClientHandler(s, i, dis, dos);
+                ClientHandler mtch = new ClientHandler(s, i, dis, dos, gui);
 
                 // Create a new Thread with this object.
                 Thread t = new Thread(mtch);
