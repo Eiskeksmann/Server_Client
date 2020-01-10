@@ -113,4 +113,9 @@ public class ClientPanel extends BenPanel implements ActionListener {
     }
     public void addClient(String name){ clients.add(name); }
     public void removeClient(String name){ clients.remove(name); }
+    public void addChat(String add){
+
+        add += " ... send from me";
+        inbox.add(add);
+    }
 }

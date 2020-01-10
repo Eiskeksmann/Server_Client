@@ -53,6 +53,7 @@ public class Client
                                 dos.writeUTF(msg);
                                 pan.setCommandText("");
                             }
+
                         } catch (IOException e) {
 
                             System.out.println("DOS -> SERVER CONNECTION HAS BEEN LOST ...");
@@ -81,7 +82,7 @@ public class Client
                         switch(command){
 
                             case("[SERVER]"):
-                                pan.addServerCom(val);
+                                pan.addServerCom(msg);
                                 break;
                             case("[LOGIN]"):
                                 pan.addClient(val);
@@ -89,10 +90,14 @@ public class Client
                             case("[LOGOUT]"):
                                 pan.removeClient(val);
                                 break;
+                            case("[ME]"):
+                                pan.addInbox(val);
+                                break;
                             default:
                                 pan.addInbox(msg);
                                 break;
                         }
+
 
                     } catch (IOException e) {
 

@@ -192,6 +192,7 @@ class ClientHandler implements Runnable
                                      pan.addLog("[MSG] DELIVERY SUCCESS FROM [" + this.name + "] to ["
                                              + ch.name + "]");
                                      ch.dos.writeUTF("[MSG]-"+ this.name + " : "+MsgToSend);
+                                     dos.writeUTF("[ME]-"+MsgToSend);
                                      break;
                                  }
                              }
@@ -235,7 +236,6 @@ class ClientHandler implements Runnable
 
                     break;
                 }
-
 
             } catch (SocketException e) {
 
