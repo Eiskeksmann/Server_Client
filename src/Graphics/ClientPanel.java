@@ -33,6 +33,7 @@ public class ClientPanel extends BenPanel implements ActionListener {
         return sendCommand;
     }
 
+    //Override Method Space
     @Override
     public void init() {
 
@@ -44,6 +45,31 @@ public class ClientPanel extends BenPanel implements ActionListener {
         initComponents();
         initLayout();
     }
+
+    @Override
+    public void update() {
+
+    }
+
+    @Override
+    public void input() {
+
+    }
+
+    @Override
+    public void render(Graphics g) {
+
+    }
+
+    @Override
+    public void actionPerformed(ActionEvent ae) {
+
+        if(ae.getSource() == cmd){
+            sendCommand = true;
+        }
+    }
+
+    //Method Space
     private void initComponents(){
 
         //List
@@ -74,31 +100,6 @@ public class ClientPanel extends BenPanel implements ActionListener {
 
         this.add(servercom);
     }
-
-    @Override
-    public void update() {
-
-    }
-
-    @Override
-    public void input() {
-
-    }
-
-    @Override
-    public void render(Graphics g) {
-
-    }
-
-    @Override
-    public void actionPerformed(ActionEvent ae) {
-
-        if(ae.getSource() == cmd){
-            sendCommand = true;
-        }
-    }
-
-    //Method Space
     public void setCommandText(String text){
         input.setText(text);
     }

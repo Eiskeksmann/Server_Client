@@ -15,6 +15,7 @@ public class Server
     public Server(){
 
        gui = new Window("SERVER");
+       new Window("TEST");
     }
 
     // Vector to store active clients

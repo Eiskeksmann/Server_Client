@@ -1,18 +1,12 @@
 package Graphics;
 
-import Graphics.BenPanel;
-import Graphics.ClientPanel;
-import Graphics.ServerPanel;
 import Numbers.Constants;
 
 import javax.swing.*;
-import javax.swing.border.LineBorder;
-import java.awt.*;
 
 public class Window extends JFrame {
 
     private BenPanel bpanel;
-    Container container;
 
     public Window(String title){
 
@@ -28,10 +22,15 @@ public class Window extends JFrame {
                 bpanel = new ClientPanel(Constants.CLIENT_RES_X,Constants.CLIENT_RES_Y);
                 setContentPane(bpanel);
                 break;
+            case("TEST"):
+                bpanel = new TestPanel(1200, 600);
+                setContentPane(bpanel);
+                break;
         }
         setLocationRelativeTo(null);
         pack();
         setVisible(true);
+
     }
     public BenPanel getBpanel(){
         return bpanel;
