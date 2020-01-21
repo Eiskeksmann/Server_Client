@@ -1,15 +1,27 @@
 package Graphics;
 
+import Numbers.Constants;
+import com.sun.xml.internal.bind.v2.runtime.reflect.opt.Const;
+import org.omg.CORBA.CODESET_INCOMPATIBLE;
+
 import javax.swing.*;
+import javax.swing.border.LineBorder;
+import javax.swing.border.TitledBorder;
 import java.awt.*;
 
 public abstract class BenPanel extends JPanel{
 
+    private final Color COL_DARKISHBLUE = new Color(18, 38, 58);
+    private final Font FONT_CASUAL = new Font("Arial", Font.BOLD, 14);
+
     private int res_x;
     private int res_y;
 
+    public Color getDefaultColor(){ return COL_DARKISHBLUE; }
+    public Font getDefaultFont(){ return FONT_CASUAL; }
     public int getRes_x(){ return res_x; }
     public int getRes_y(){ return res_y; }
+
     public void setRes_x(int res_x){ this.res_x = res_x; }
     public void setRes_y(int res_y){ this.res_y = res_y; }
 
@@ -18,4 +30,60 @@ public abstract class BenPanel extends JPanel{
     public abstract void update();
     public abstract void input();
     public abstract void render(Graphics g);
+
+    protected void setDefaultTextArea(TextArea txa){
+
+        txa.setForeground(COL_DARKISHBLUE);
+        txa.setEditable(false);
+        txa.setFont(FONT_CASUAL);
+    }
+    protected void setDefaultTextFieldStyle(TextField tf){
+
+        tf.setFont(FONT_CASUAL);
+        tf.setForeground(COL_DARKISHBLUE);
+    }
+    protected void setDefaultListStyle(List l){
+
+        l.setFont(FONT_CASUAL);
+        l.setForeground(COL_DARKISHBLUE);
+        l.setMultipleMode(true);
+    }
+    protected void setDefaultButtonStyle(Button b){
+
+        b.setBackground(Color.WHITE);
+        b.setForeground(COL_DARKISHBLUE);
+        b.setFont(FONT_CASUAL);
+    }
+    protected void setDefaultLabelStyle(Label l){
+
+        l.setAlignment(Label.CENTER);
+        l.setFont(FONT_CASUAL);
+        l.setForeground(Color.WHITE);
+        l.setBackground(COL_DARKISHBLUE);
+    }
+    protected void setDefaultPanelStyle(JPanel jp){
+
+        jp.setBackground(Color.WHITE);
+        jp.setBorder(new LineBorder(COL_DARKISHBLUE, 3));
+    }
+    protected void setDefaultMasterPanelStyle(JPanel jp, String title){
+
+        jp.setBackground(Color.WHITE);
+        jp.setBorder(new TitledBorder(new LineBorder(COL_DARKISHBLUE, 3),
+                title, TitledBorder.DEFAULT_JUSTIFICATION, TitledBorder.DEFAULT_POSITION ,
+                FONT_CASUAL));
+    }
+    protected void resetGridBagConstraints(GridBagConstraints g) {
+
+        g.weighty = 0.0;
+        g.weightx = 0.0;
+        g.anchor = GridBagConstraints.FIRST_LINE_START;
+        g.insets = new Insets(Constants.ZERO, Constants.ZERO, Constants.ZERO, Constants.ZERO);
+        g.ipady = 0;
+        g.ipadx = 0;
+        g.fill = GridBagConstraints.NONE;
+        g.gridheight = 1;
+        g.gridwidth = 1;
+    }
+
 }

@@ -125,28 +125,6 @@ public class TestPanel extends BenPanel {
 
         this.setLayout(lay_bor);
     }
-    private void setDefaultMasterPanelStyle(JPanel jp, String title){
-        jp.setBackground(Color.WHITE);
-        jp.setBorder(new TitledBorder(new LineBorder(COL_DARKISHBLUE, 3),
-                title, TitledBorder.DEFAULT_JUSTIFICATION, TitledBorder.DEFAULT_POSITION ,
-                FONT_CASUAL));
-    }
-    private void setDefaultPanelStyle(JPanel jp){
-        jp.setBackground(Color.WHITE);
-        jp.setBorder(new LineBorder(COL_DARKISHBLUE, 3));
-    }
-    private void setDefaultLabelStyle(Label l){
-
-        l.setAlignment(Label.CENTER);
-        l.setFont(FONT_CASUAL);
-        l.setForeground(Color.WHITE);
-        l.setBackground(COL_DARKISHBLUE);
-    }
-    private void setDefaultButtonStyle(Button b){
-        b.setBackground(Color.WHITE);
-        b.setForeground(COL_DARKISHBLUE);
-        b.setFont(FONT_CASUAL);
-    }
     private void setCenterPanel(){
 
         //Center

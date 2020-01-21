@@ -23,7 +23,7 @@ public class Window extends JFrame {
                 setContentPane(bpanel);
                 break;
             case("TEST"):
-                bpanel = new TestPanel(1200, 600);
+                bpanel = new ServerGUI(Constants.SERVER_RES_X, Constants.SERVER_RES_Y);
                 setContentPane(bpanel);
                 break;
         }
