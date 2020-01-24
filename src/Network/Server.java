@@ -1,5 +1,7 @@
 package Network;
 
+import Graphics.GWindow;
+import Graphics.ServerGUI;
 import Graphics.Window;
 import Numbers.Login;
 
@@ -10,12 +12,14 @@ import java.net.*;
 // Network.Server class
 public class Server
 {
-    public static Window gui;
+    public static GWindow gui;
 
     public Server(){
 
-       gui = new Window("SERVER");
-       new Window("TEST");
+       //gui = new Window("SERVER");
+       //new Window("TEST");
+
+        gui = new GWindow<ServerGUI>(new ServerGUI());
     }
 
     // Vector to store active clients

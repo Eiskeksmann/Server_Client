@@ -6,25 +6,30 @@ import java.net.*;
 import java.util.Scanner;
 import java.util.StringTokenizer;
 
+import Graphics.ClientGUI;
 import Graphics.ClientPanel;
+import Graphics.GWindow;
 import Graphics.Window;
 
 public class Client
 {
     final static int ServerPort = 40000;
-    public static Window gui;
-    public static ClientPanel pan;
+    public GWindow gui;
+    public ClientGUI client_gui;
+
+    public GWindow<ClientGUI> getGUI(){ return gui;}
+    public ClientGUI getClientGUI(){ return client_gui; }
 
     public Client(){
 
-       gui = new Window("CLIENT");
-       pan = (ClientPanel)gui.getBpanel();
-
+        client_gui = new ClientGUI();
+        gui = new GWindow<ClientGUI>(client_gui);
     }
 
     public static void main(String args[]) throws UnknownHostException, IOException
     {
-        new Client();
+        Client client = new Client();
+        ClientGUI client_gui = client.getClientGUI();
 
         Scanner scn = new Scanner(System.in);
 
@@ -45,13 +50,13 @@ public class Client
             public void run() {
                 while (true) {
 
-                    String msg = pan.getCommand();
+                    String msg = client_gui.getCommand();
 
                         try {
                             // write on the output stream
-                            if(pan.getSendCommand()){
+                            if(client_gui.isConfirmed()){
                                 dos.writeUTF(msg);
-                                pan.setCommandText("");
+                                client_gui.clearCommandLine();
                             }
 
                         } catch (IOException e) {
@@ -82,19 +87,19 @@ public class Client
                         switch(command){
 
                             case("[SERVER]"):
-                                pan.addServerCom(msg);
+                                client_gui.addLog(msg);
                                 break;
                             case("[LOGIN]"):
-                                pan.addClient(val);
+                                client_gui.addClient(val);
                                 break;
                             case("[LOGOUT]"):
-                                pan.removeClient(val);
+                                client_gui.removeClient(val);
                                 break;
                             case("[ME]"):
-                                pan.addInbox(val);
+                                //client_gui.addInbox(val);
                                 break;
                             default:
-                                pan.addInbox(msg);
+                                //client_gui.addInbox(msg);
                                 break;
                         }
 
@@ -110,7 +115,5 @@ public class Client
 
         sendMessage.start();
         readMessage.start();
-
-        //Graphical Overlay
     }
 }

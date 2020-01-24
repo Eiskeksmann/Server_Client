@@ -1,8 +1,6 @@
 package Graphics;
 
 import Numbers.Constants;
-import com.sun.xml.internal.bind.v2.runtime.reflect.opt.Const;
-import org.omg.CORBA.CODESET_INCOMPATIBLE;
 
 import javax.swing.*;
 import javax.swing.border.LineBorder;
@@ -11,8 +9,8 @@ import java.awt.*;
 
 public abstract class BenPanel extends JPanel{
 
-    private final Color COL_DARKISHBLUE = new Color(18, 38, 58);
-    private final Font FONT_CASUAL = new Font("Arial", Font.BOLD, 14);
+    private static final Color COL_DARKISHBLUE = new Color(18, 38, 58);
+    private static final Font FONT_CASUAL = new Font("Arial", Font.BOLD, 14);
 
     private int res_x;
     private int res_y;
@@ -31,12 +29,9 @@ public abstract class BenPanel extends JPanel{
     public abstract void input();
     public abstract void render(Graphics g);
 
-    protected void setDefaultTextArea(TextArea txa){
+    public static Font getFONT_CASUAL(){ return FONT_CASUAL; }
+    public static Color getCOL_DARKISHBLUE(){ return COL_DARKISHBLUE; }
 
-        txa.setForeground(COL_DARKISHBLUE);
-        txa.setEditable(false);
-        txa.setFont(FONT_CASUAL);
-    }
     protected void setDefaultTextFieldStyle(TextField tf){
 
         tf.setFont(FONT_CASUAL);
@@ -65,6 +60,7 @@ public abstract class BenPanel extends JPanel{
 
         jp.setBackground(Color.WHITE);
         jp.setBorder(new LineBorder(COL_DARKISHBLUE, 3));
+        jp.setDoubleBuffered(true);
     }
     protected void setDefaultMasterPanelStyle(JPanel jp, String title){
 
@@ -85,5 +81,12 @@ public abstract class BenPanel extends JPanel{
         g.gridheight = 1;
         g.gridwidth = 1;
     }
+    protected void setDefaultTextAreaStyle(JTextArea jta){
 
+        jta.setFont(FONT_CASUAL);
+        jta.setForeground(Color.WHITE);
+        jta.setBackground(COL_DARKISHBLUE);
+        jta.setEditable(false);
+        jta.setRows(15);
+    }
 }

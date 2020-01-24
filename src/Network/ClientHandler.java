@@ -1,5 +1,7 @@
 package Network;
 
+import Graphics.GWindow;
+import Graphics.ServerGUI;
 import Graphics.ServerPanel;
 import Graphics.Window;
 import Numbers.Login;
@@ -11,24 +13,24 @@ import java.net.*;
 class ClientHandler implements Runnable
 {
     private String name;
-    final DataInputStream dis;
-    final DataOutputStream dos;
-    Window gui;
-    ServerPanel pan;
-    Socket s;
-    boolean isloggedin;
+    private final DataInputStream dis;
+    private final DataOutputStream dos;
+    private GWindow gui;
+    private ServerGUI server_gui;
+    private Socket s;
+    private boolean isloggedin;
 
     // constructor
     public ClientHandler(Socket s, int i,
                          DataInputStream dis, DataOutputStream dos,
-                         Window gui) {
+                         GWindow gui) {
         this.gui = gui;
         this.dis = dis;
         this.dos = dos;
         this.name = Integer.toString(i);
         this.s = s;
         this.isloggedin=false;
-        this.pan = (ServerPanel) gui.getBpanel();
+        this.server_gui = (ServerGUI) gui.getGUI();
     }
 
     private void msgFailed(){
@@ -82,16 +84,16 @@ class ClientHandler implements Runnable
 
                                         permission = false;
                                         dos.writeUTF("[SERVER]-This User is already logged in...");
-                                        pan.addLog("CLIENT NUMBER [" +  name +"] LOGIN PERMISSION DENIED -" +
+                                        server_gui.addLog("CLIENT NUMBER [" +  name +"] LOGIN PERMISSION DENIED -" +
                                                 " USER HAS ALREADY LOGGED IN FROM ANOTHER CLIENT");
                                     }
                                 }
                                 if(permission) {
                                     //Login did work - User already existed in Database
                                     dos.writeUTF("[SERVER]-You are now logged in as: " + attempt.getID());
-                                    pan.addLog("USER: [" + attempt.getID() + "] has logged in");
+                                    server_gui.addLog("USER: [" + attempt.getID() + "] has logged in");
                                     name = attempt.getID();
-                                    pan.addClient(name);
+                                    server_gui.addClient(name);
                                     isloggedin = true;
                                     for(ClientHandler ch : Server.ar){
                                         if(ch.isloggedin){
@@ -118,9 +120,9 @@ class ClientHandler implements Runnable
                             Server.ll.add(attempt);
                             dos.writeUTF("[SERVER]-New Account created and logged in as: " + attempt.getID());
                             System.out.println("USER: [" + attempt.getID() +"] has registered and logged  in");
-                            pan.addLog("USER: [" + attempt.getID() +"] has registered and logged  in");
+                            server_gui.addLog("USER: [" + attempt.getID() +"] has registered and logged  in");
                             name = attempt.getID();
-                            pan.addClient(name);
+                            server_gui.addClient(name);
                             isloggedin = true;
                             for(ClientHandler ch : Server.ar){
                                 if(ch.isloggedin){
@@ -145,7 +147,7 @@ class ClientHandler implements Runnable
 
                     case("?"):
                         System.out.println("USER: [" + name + "] TRIES COMMAND:" + received);
-                        pan.addLog("USER: [" + name + "] TRIES COMMAND:" + received);
+                        server_gui.addLog("USER: [" + name + "] TRIES COMMAND:" + received);
                         dos.writeUTF("[SERVER]-WELCOME [" + name + "] \n"
                                 + "TYPE [LOC] - displays a list of active clients \n" +
                                 "TYPE [MSG] - to send a Message to a client \n" +
@@ -154,7 +156,7 @@ class ClientHandler implements Runnable
 
                     case("LOC"):
                         System.out.println("USER: [" + name + "] TRIES COMMAND:" + received);
-                        pan.addLog("USER: [" + name + "] TRIES COMMAND:" + received);
+                        server_gui.addLog("USER: [" + name + "] TRIES COMMAND:" + received);
                         for(ClientHandler ch : Server.ar){
 
                             dos.writeUTF("[SERVER]-[ACTIVE CLIENT] : " + ch.name);
@@ -163,7 +165,7 @@ class ClientHandler implements Runnable
 
                     case("MSG"):
                         System.out.println("USER: [" + name + "] TRIES COMMAND:" + received);
-                        pan.addLog("USER: [" + name + "] TRIES COMMAND:" + received);
+                        server_gui.addLog("USER: [" + name + "] TRIES COMMAND:" + received);
                         // break the string into message and recipient part
                         dos.writeUTF("[SERVER]-Please enter your Message in the following Format: \n " +
                                 "MESSAGE[TEXT]-RECIPIENT[NAME]");
@@ -189,7 +191,7 @@ class ClientHandler implements Runnable
                                      dos.writeUTF("[SERVER]-Message was delivered... ");
                                      System.out.println("[MSG] DELIVERY SUCCESS FROM [" + this.name + "] to ["
                                              + ch.name + "]");
-                                     pan.addLog("[MSG] DELIVERY SUCCESS FROM [" + this.name + "] to ["
+                                     server_gui.addLog("[MSG] DELIVERY SUCCESS FROM [" + this.name + "] to ["
                                              + ch.name + "]");
                                      ch.dos.writeUTF("[MSG]-"+ this.name + " : "+MsgToSend);
                                      dos.writeUTF("[ME]-"+MsgToSend);
@@ -214,7 +216,7 @@ class ClientHandler implements Runnable
                         break;
                     case("LOGOUT"):
 
-                        pan.addLog("USER: [" + name +"] has successfully logged out");
+                        server_gui.addLog("USER: [" + name +"] has successfully logged out");
                         for(ClientHandler ch: Server.ar){
 
                             if(ch.isloggedin){
@@ -225,7 +227,7 @@ class ClientHandler implements Runnable
                             }
                         }
                         Server.ar.remove(this);
-                        pan.removeClient(this.name);
+                        server_gui.removeClient(this.name);
                         this.isloggedin=false;
                         isactive = false;
                         break;

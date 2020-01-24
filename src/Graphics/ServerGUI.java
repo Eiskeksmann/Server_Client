@@ -18,16 +18,13 @@ public class ServerGUI extends BenPanel{
 
     private Button cmd_send;
     private List lst_clients;
-    private TextArea txa_serverlog;
+    private JTextArea jta_serverlog;
     private TextField txt_commandline;
 
     private Label lbl_server_north;
     private Label lbl_clients;
 
-    public ServerGUI(int res_x, int res_y){
-
-        super.setRes_x(res_x);
-        super.setRes_y(res_y);
+    public ServerGUI(){
 
         init();
     }
@@ -42,7 +39,7 @@ public class ServerGUI extends BenPanel{
 
         cmd_send = new Button("CONFIRM");
         lst_clients = new List();
-        txa_serverlog = new TextArea();
+        jta_serverlog = new JTextArea();
         txt_commandline = new TextField();
 
         lbl_server_north = new Label();
@@ -59,7 +56,7 @@ public class ServerGUI extends BenPanel{
 
         setDefaultButtonStyle(cmd_send);
         setDefaultListStyle(lst_clients);
-        setDefaultTextArea(txa_serverlog);
+        setDefaultTextAreaStyle(jta_serverlog);
         setDefaultTextFieldStyle(txt_commandline);
 
         setDefaultLabelStyle(lbl_server_north);
@@ -77,11 +74,6 @@ public class ServerGUI extends BenPanel{
         //(ML) Center
         this.add(pan_center, BorderLayout.CENTER);
         initCenter();
-
-        //(ML) North
-        this.add(pan_north, BorderLayout.NORTH);
-        initNorth();
-
     }
     private void initWest(){
 
@@ -91,14 +83,14 @@ public class ServerGUI extends BenPanel{
         gbc.gridx = 0;
         gbc.gridy = 0;
         gbc.anchor = GridBagConstraints.PAGE_END;
-        gbc.weighty = 0.05;
+        gbc.weighty = 0.1;
 
         //add Client Label
         pan_west.add(lbl_clients, gbc);
 
         gbc.gridx = 0;
         gbc.gridy = 1;
-        gbc.weighty = 0.95;
+        gbc.weighty = 0.9;
         gbc.fill = GridBagConstraints.VERTICAL;
         gbc.anchor = GridBagConstraints.PAGE_START;
         gbc.insets = new Insets(4,4,4,4);
@@ -116,37 +108,56 @@ public class ServerGUI extends BenPanel{
         gbc.gridx = 0;
         gbc.gridy = 0;
         gbc.weightx = 1.0;
-        gbc.weighty = 0.9;
+        gbc.weighty = 0.8;
         gbc.insets = new Insets(4,4,4,4);
-        gbc.anchor = GridBagConstraints.FIRST_LINE_START;
-        gbc.fill = GridBagConstraints.VERTICAL;
+        gbc.anchor = GridBagConstraints.PAGE_START;
+        gbc.fill = GridBagConstraints.HORIZONTAL;
 
         pan_center.add(pan_center_left, gbc);
-        pan_center_left.setLayout(new BoxLayout(pan_center_left, BoxLayout.Y_AXIS));
-        //Add ServerLog TextArea
-        pan_center_left.add(txa_serverlog);
-        pan_center_left.add(pan_center_bottom);
+        pan_center_left.setLayout(gbl);
+        pan_center_left.add(jta_serverlog, gbc);
+
+        gbc.gridx = 0;
+        gbc.gridy = 1;
+        gbc.weighty = 0.2;
+        pan_center_left.add(pan_center_bottom, gbc);
 
         pan_center_bottom.setLayout(gbl);
         gbc.gridx = 0;
         gbc.gridy = 1;
-        gbc.weightx = 0.6;
-        gbc.weighty = 0.1;
+        gbc.weightx = 1.0;
+        gbc.weighty = 0.8;
         gbc.fill = GridBagConstraints.HORIZONTAL;
-        gbc.anchor = GridBagConstraints.FIRST_LINE_START;
+        gbc.anchor = GridBagConstraints.LAST_LINE_START;
         pan_center_bottom.add(txt_commandline, gbc);
 
-        gbc.weightx = 0.4;
+        gbc.gridx = 1;
+        gbc.gridy = 1;
+        gbc.weighty = 0.2;
+        gbc.anchor = GridBagConstraints.LAST_LINE_START;
         pan_center_bottom.add(cmd_send, gbc);
-    }
-    private void initNorth(){
 
+        resetGridBagConstraints(gbc);
+    }
+
+    //GUI Interactions
+    public void addClient(String name){
+
+        lst_clients.add(name);
+    }
+    public void removeClient(String name){
+
+        lst_clients.remove(name);
+    }
+    public void addLog(String add){
+
+        String was = jta_serverlog.getText();
+        jta_serverlog.setText(was += "\n" + add);
     }
 
     @Override
     public void init() {
 
-        setPreferredSize(new Dimension(super.getRes_x(), super.getRes_y()));
         setFocusable(true);
         requestFocus();
 

@@ -3,6 +3,7 @@ package Graphics;
 import Numbers.Constants;
 
 import javax.swing.*;
+import java.awt.*;
 
 public class Window extends JFrame {
 
@@ -15,15 +16,15 @@ public class Window extends JFrame {
         switch (title){
 
             case("SERVER"):
-                bpanel = new ServerPanel(Constants.SERVER_RES_X,Constants.SERVER_RES_Y);
+                //bpanel = new ServerPanel();
                 setContentPane(bpanel);
                 break;
             case("CLIENT"):
-                bpanel = new ClientPanel(Constants.CLIENT_RES_X,Constants.CLIENT_RES_Y);
+                //bpanel = new ClientPanel();
                 setContentPane(bpanel);
                 break;
             case("TEST"):
-                bpanel = new ServerGUI(Constants.SERVER_RES_X, Constants.SERVER_RES_Y);
+                bpanel = new ServerGUI();
                 setContentPane(bpanel);
                 break;
         }
