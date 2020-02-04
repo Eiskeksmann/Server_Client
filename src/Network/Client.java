@@ -13,17 +13,21 @@ import Graphics.Window;
 
 public class Client
 {
-    final static int ServerPort = 40000;
-    public GWindow gui;
-    public ClientGUI client_gui;
+    private GWindow gui;
+    private ClientGUI client_gui;
+    private String id;
 
-    public GWindow<ClientGUI> getGUI(){ return gui;}
+    public GWindow<ClientGUI> getGUI(){ return gui; }
     public ClientGUI getClientGUI(){ return client_gui; }
+    public String getId(){ return id; }
+
+    public void setId(String set){ id = set; }
 
     public Client(){
 
         client_gui = new ClientGUI();
         gui = new GWindow<ClientGUI>(client_gui);
+        id = "";
     }
 
     public static void main(String args[]) throws UnknownHostException, IOException
@@ -37,7 +41,7 @@ public class Client
         InetAddress ip = InetAddress.getByName("localhost");
 
         // establish the connection
-        Socket s = new Socket(ip, ServerPort);
+        Socket s = new Socket(ip, 40000);
 
         // obtaining input and out streams
         DataInputStream dis = new DataInputStream(s.getInputStream());
@@ -50,8 +54,7 @@ public class Client
             public void run() {
                 while (true) {
 
-                    String msg = client_gui.getCommand();
-
+                        String msg = client_gui.getCommand();
                         try {
                             // write on the output stream
                             if(client_gui.isConfirmed()){
@@ -92,14 +95,30 @@ public class Client
                             case("[LOGIN]"):
                                 client_gui.addClient(val);
                                 break;
+                            case("[MYLOGIN]"):
+                                client_gui.addClient(val);
+                                client.setId(val);
+                                client_gui.setId(val);
+                                break;
                             case("[LOGOUT]"):
                                 client_gui.removeClient(val);
                                 break;
+                            case("[MSG]"):
+                                StringTokenizer tok = new StringTokenizer(val, ":");
+                                String transmitter = tok.nextToken();
+                                String message = tok.nextToken();
+                                String receiver = tok.nextToken();
+                                client_gui.transmittMessage(transmitter, message, receiver, false);
+                                break;
                             case("[ME]"):
-                                //client_gui.addInbox(val);
+                                StringTokenizer t = new StringTokenizer(val, ":");
+                                String trans = t.nextToken();
+                                String mes = t.nextToken();
+                                String rec = t.nextToken();
+                                client_gui.transmittMessage(trans, mes, rec, true);
                                 break;
                             default:
-                                //client_gui.addInbox(msg);
+                                client_gui.addClientLog(msg);
                                 break;
                         }
 

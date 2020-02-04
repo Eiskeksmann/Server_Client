@@ -15,7 +15,7 @@ class ClientHandler implements Runnable
     private String name;
     private final DataInputStream dis;
     private final DataOutputStream dos;
-    private GWindow gui;
+    private Server server;
     private ServerGUI server_gui;
     private Socket s;
     private boolean isloggedin;
@@ -23,14 +23,16 @@ class ClientHandler implements Runnable
     // constructor
     public ClientHandler(Socket s, int i,
                          DataInputStream dis, DataOutputStream dos,
-                         GWindow gui) {
-        this.gui = gui;
+                         Server server) {
+
         this.dis = dis;
         this.dos = dos;
         this.name = Integer.toString(i);
         this.s = s;
         this.isloggedin=false;
-        this.server_gui = (ServerGUI) gui.getGUI();
+        this.server = server;
+        this.server_gui = server.getServerGUI();
+
     }
 
     private void msgFailed(){
@@ -65,7 +67,8 @@ class ClientHandler implements Runnable
                     dos.writeUTF("[SERVER]-Please Enter your Password:");
                     String pw = dis.readUTF();
                     Login attempt = new Login(id, pw);
-                    dos.writeUTF("[SERVER]-Trying to log in as: \n ID:" + attempt.getID() + "\n PW:" + attempt.getPW());
+                    dos.writeUTF("[SERVER]-Trying to log in as: \n ID:" + attempt.getID()
+                            + "\n PW:" + attempt.getPW());
 
                     //New Numbers.Login Logic ...
                     dos.writeUTF("[SERVER]-Checking Through[" + Server.ll.size() + "] Authorized Clients ...");
@@ -78,7 +81,7 @@ class ClientHandler implements Runnable
 
                                 //Login Successfull
                                 boolean permission = true;
-                                for (ClientHandler ch : Server.ar) {
+                                for (ClientHandler ch : server.getAr()) {
 
                                     if (ch.name.equals(lo.getID()) && ch.isloggedin) {
 
@@ -95,11 +98,11 @@ class ClientHandler implements Runnable
                                     name = attempt.getID();
                                     server_gui.addClient(name);
                                     isloggedin = true;
-                                    for(ClientHandler ch : Server.ar){
+                                    for(ClientHandler ch : server.getAr()){
                                         if(ch.isloggedin){
                                             ch.dos.writeUTF("[LOGIN]-"+ name);
                                             if(!ch.name.equals(this.name))
-                                            dos.writeUTF("[LOGIN]-"+ch.name);
+                                            dos.writeUTF("[MYLOGIN]-"+ch.name);
                                         }
                                     }
                                     break;
@@ -124,11 +127,11 @@ class ClientHandler implements Runnable
                             name = attempt.getID();
                             server_gui.addClient(name);
                             isloggedin = true;
-                            for(ClientHandler ch : Server.ar){
+                            for(ClientHandler ch : server.getAr()){
                                 if(ch.isloggedin){
                                     ch.dos.writeUTF("[LOGIN]-"+ name);
                                     if(!ch.name.equals(this.name))
-                                    dos.writeUTF("[LOGIN]-"+ch.name);
+                                    dos.writeUTF("[LOGIN]-"+ ch.name);
                                 }
                             }
                             break;
@@ -157,7 +160,7 @@ class ClientHandler implements Runnable
                     case("LOC"):
                         System.out.println("USER: [" + name + "] TRIES COMMAND:" + received);
                         server_gui.addLog("USER: [" + name + "] TRIES COMMAND:" + received);
-                        for(ClientHandler ch : Server.ar){
+                        for(ClientHandler ch : server.getAr()){
 
                             dos.writeUTF("[SERVER]-[ACTIVE CLIENT] : " + ch.name);
                         }
@@ -182,19 +185,17 @@ class ClientHandler implements Runnable
                                  msgFailed();
                                  break;
                              }
-                             for (ClientHandler ch : Server.ar)
+                             for (ClientHandler ch : server.getAr())
                              {
                                  // if the recipient is found, write on its
                                  // output stream
                                  if (ch.name.equals(recipient) && ch.isloggedin==true)
                                  {
-                                     dos.writeUTF("[SERVER]-Message was delivered... ");
-                                     System.out.println("[MSG] DELIVERY SUCCESS FROM [" + this.name + "] to ["
-                                             + ch.name + "]");
                                      server_gui.addLog("[MSG] DELIVERY SUCCESS FROM [" + this.name + "] to ["
                                              + ch.name + "]");
-                                     ch.dos.writeUTF("[MSG]-"+ this.name + " : "+MsgToSend);
-                                     dos.writeUTF("[ME]-"+MsgToSend);
+                                     ch.dos.writeUTF("[MSG]-" + name + ": " + MsgToSend + ":" + ch.name);
+                                     dos.writeUTF("[ME]-" + name + ": " + MsgToSend + ":" + ch.name);
+                                     dos.writeUTF("[SERVER]-Message was delivered... ");
                                      break;
                                  }
                              }
@@ -217,7 +218,7 @@ class ClientHandler implements Runnable
                     case("LOGOUT"):
 
                         server_gui.addLog("USER: [" + name +"] has successfully logged out");
-                        for(ClientHandler ch: Server.ar){
+                        for(ClientHandler ch: server.getAr()){
 
                             if(ch.isloggedin){
                                 ch.dos.writeUTF("[LOGOUT]-" + this.name);
@@ -226,13 +227,12 @@ class ClientHandler implements Runnable
                                 }
                             }
                         }
-                        Server.ar.remove(this);
+                        server.getAr().remove(this);
                         server_gui.removeClient(this.name);
                         this.isloggedin=false;
                         isactive = false;
                         break;
                 }
-
 
                 if(!isactive){
 

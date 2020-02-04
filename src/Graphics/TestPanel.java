@@ -26,7 +26,7 @@ public class TestPanel extends BenPanel {
 
     private TextField txt_input;
 
-    private Button cmd_send;
+    private JButton cmd_send;
 
     private JPanel pan_center,
             pan_center_left, pan_center_left_top, pan_center_left_bot,
@@ -95,7 +95,7 @@ public class TestPanel extends BenPanel {
         txt_input = new TextField(55);
 
         //Button
-        cmd_send = new Button("Confirm Command");
+        cmd_send = new JButton("Confirm Command");
         setDefaultButtonStyle(cmd_send);
 
         //Panels

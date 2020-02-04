@@ -12,18 +12,23 @@ import java.net.*;
 // Network.Server class
 public class Server
 {
-    public static GWindow gui;
+    private GWindow gui;
+    private ServerGUI server_gui;
+    private Vector<ClientHandler> ar;
 
     public Server(){
 
-       //gui = new Window("SERVER");
-       //new Window("TEST");
-
-        gui = new GWindow<ServerGUI>(new ServerGUI());
+        ar = new Vector<>();
+        server_gui = new ServerGUI();
+        gui = new GWindow<ServerGUI>(server_gui);
     }
 
-    // Vector to store active clients
-    static Vector<ClientHandler> ar = new Vector<>();
+    public Vector<ClientHandler> getAr(){
+        return ar;
+    }
+    public ServerGUI getServerGUI(){
+        return server_gui;
+    }
 
     // counter for clients
     static int i = 0;
@@ -34,7 +39,7 @@ public class Server
     public static void main(String[] args) throws IOException
     {
         // server is listening on port 1234
-        new Server();
+        Server server = new Server();
 
         ServerSocket ss = new ServerSocket(40000);
 
@@ -63,7 +68,7 @@ public class Server
                 System.out.println("Creating a new handler for this client...");
 
                 // Create a new handler object for handling this request.
-                ClientHandler mtch = new ClientHandler(s, i, dis, dos, gui);
+                ClientHandler mtch = new ClientHandler(s, i, dis, dos, server);
 
                 // Create a new Thread with this object.
                 Thread t = new Thread(mtch);
@@ -71,7 +76,7 @@ public class Server
                 System.out.println("Adding this client to active client list");
 
                 // add this client to active clients list
-                ar.add(mtch);
+                server.getAr().add(mtch);
 
                 // start the thread.
                 t.start();

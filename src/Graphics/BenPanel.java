@@ -10,7 +10,7 @@ import java.awt.*;
 public abstract class BenPanel extends JPanel{
 
     private static final Color COL_DARKISHBLUE = new Color(18, 38, 58);
-    private static final Font FONT_CASUAL = new Font("Arial", Font.BOLD, 14);
+    private static final Font FONT_CASUAL = new Font("Arial", Font.BOLD, 12);
 
     private int res_x;
     private int res_y;
@@ -32,7 +32,15 @@ public abstract class BenPanel extends JPanel{
     public static Font getFONT_CASUAL(){ return FONT_CASUAL; }
     public static Color getCOL_DARKISHBLUE(){ return COL_DARKISHBLUE; }
 
-    protected void setDefaultTextFieldStyle(TextField tf){
+    protected void setDefaultTextAreaStyle(TextArea txa){
+
+        txa.setFont(FONT_CASUAL);
+        txa.setForeground(Color.WHITE);
+        txa.setBackground(COL_DARKISHBLUE);
+        txa.setEditable(false);
+        txa.setRows(5);
+    }
+    protected void setDefaultTextFieldStyle(JTextField tf){
 
         tf.setFont(FONT_CASUAL);
         tf.setForeground(COL_DARKISHBLUE);
@@ -43,7 +51,7 @@ public abstract class BenPanel extends JPanel{
         l.setForeground(COL_DARKISHBLUE);
         l.setMultipleMode(true);
     }
-    protected void setDefaultButtonStyle(Button b){
+    protected void setDefaultButtonStyle(JButton b){
 
         b.setBackground(Color.WHITE);
         b.setForeground(COL_DARKISHBLUE);
@@ -69,6 +77,13 @@ public abstract class BenPanel extends JPanel{
                 title, TitledBorder.DEFAULT_JUSTIFICATION, TitledBorder.DEFAULT_POSITION ,
                 FONT_CASUAL));
     }
+    protected void setDefaultTabbedPaneStyle(JTabbedPane jtp){
+
+        jtp.setFont(FONT_CASUAL);
+        jtp.setForeground(Color.WHITE);
+        jtp.setBackground(COL_DARKISHBLUE);
+        jtp.setTabPlacement(JTabbedPane.BOTTOM);
+    }
     protected void resetGridBagConstraints(GridBagConstraints g) {
 
         g.weighty = 0.0;
@@ -81,12 +96,6 @@ public abstract class BenPanel extends JPanel{
         g.gridheight = 1;
         g.gridwidth = 1;
     }
-    protected void setDefaultTextAreaStyle(JTextArea jta){
 
-        jta.setFont(FONT_CASUAL);
-        jta.setForeground(Color.WHITE);
-        jta.setBackground(COL_DARKISHBLUE);
-        jta.setEditable(false);
-        jta.setRows(15);
-    }
+
 }

@@ -16,10 +16,10 @@ public class ServerGUI extends BenPanel{
     private JPanel pan_north;
     private JPanel pan_center, pan_center_left, pan_center_right, pan_center_bottom;
 
-    private Button cmd_send;
+    private JButton cmd_send;
     private List lst_clients;
-    private JTextArea jta_serverlog;
-    private TextField txt_commandline;
+    private TextArea jta_serverlog;
+    private JTextField txt_commandline;
 
     private Label lbl_server_north;
     private Label lbl_clients;
@@ -37,10 +37,10 @@ public class ServerGUI extends BenPanel{
         pan_center_right = new JPanel();
         pan_center_bottom = new JPanel();
 
-        cmd_send = new Button("CONFIRM");
+        cmd_send = new JButton("CONFIRM");
         lst_clients = new List();
-        jta_serverlog = new JTextArea();
-        txt_commandline = new TextField();
+        jta_serverlog = new TextArea();
+        txt_commandline = new JTextField();
 
         lbl_server_north = new Label();
         lbl_clients = new Label("Clients");

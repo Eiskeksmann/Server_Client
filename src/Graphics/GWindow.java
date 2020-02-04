@@ -2,6 +2,7 @@ package Graphics;
 
 import Numbers.Constants;
 import javax.swing.*;
+import java.awt.*;
 
 public class GWindow <G extends BenPanel> extends JFrame {
 
@@ -19,7 +20,7 @@ public class GWindow <G extends BenPanel> extends JFrame {
 
             case("class Graphics.ClientGUI"):
                 id = "CLIENT";
-                init(Constants.CLIENT_RES_X, Constants.SERVER_RES_Y);
+                init(Constants.CLIENT_RES_X, Constants.CLIENT_RES_Y);
                 break;
 
             case("class Graphics.GameGUI"):
@@ -35,6 +36,7 @@ public class GWindow <G extends BenPanel> extends JFrame {
         setTitle(id);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setContentPane(this.gui);
+        setPreferredSize(new Dimension(res_x, res_y));
         setResizable(false);
         setLocationRelativeTo(null);
         pack();
