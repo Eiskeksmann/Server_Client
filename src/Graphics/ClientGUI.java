@@ -2,6 +2,7 @@ package Graphics;
 
 import Logic.ChatInfrastructure;
 import Logic.ChatPanel;
+import util.Cmd;
 
 import javax.swing.*;
 import java.awt.*;
@@ -19,12 +20,11 @@ public class ClientGUI extends BenPanel implements ActionListener {
     private JPanel pan_west;
     private JPanel pan_north;
     private JPanel pan_center, pan_center_left, pan_center_right, pan_center_bottom;
-    private JPanel pan_chat;
 
     private JButton cmd_send;
     private JButton cmd_inv;
 
-    private JTextField txt_commandline;
+    private Cmd txt_commandline;
 
     private JTabbedPane jtp_chat;
     private TextArea jta_clientlog;
@@ -38,6 +38,7 @@ public class ClientGUI extends BenPanel implements ActionListener {
 
     private ChatInfrastructure<String, ChatPanel> chats;
 
+    //Constructor Space
     public ClientGUI(){
 
         this.id = "";
@@ -52,8 +53,8 @@ public class ClientGUI extends BenPanel implements ActionListener {
         this.confirmed = false;
         return this.txt_commandline.getText();
     }
-    public String getId(){ return this.id; }
 
+    public void setConfirmed(boolean confirmed){ this.confirmed = confirmed; }
     public void setId(String id){ this.id = id; }
 
     private void initComponents(){
@@ -69,7 +70,7 @@ public class ClientGUI extends BenPanel implements ActionListener {
         cmd_send.addActionListener(this);
         jta_clientlog = new TextArea("",10, 1,TextArea.SCROLLBARS_VERTICAL_ONLY);
         jtp_chat = new JTabbedPane();
-        txt_commandline = new JTextField();
+        txt_commandline = new Cmd(this);
 
         lst_clients = new List();
         lbl_server_north = new Label();
@@ -139,8 +140,8 @@ public class ClientGUI extends BenPanel implements ActionListener {
         gbc.gridy = 0;
         gbc.weightx = 1.0;
         gbc.weighty = 0.5;
-        gbc.insets = new Insets(4,4,4,4);
-        gbc.anchor = GridBagConstraints.FIRST_LINE_START;
+        gbc.insets = new Insets(6,6,6,6);
+        gbc.anchor = GridBagConstraints.CENTER;
         gbc.fill = GridBagConstraints.HORIZONTAL;
 
         pan_center.add(pan_center_left, gbc);
@@ -150,6 +151,7 @@ public class ClientGUI extends BenPanel implements ActionListener {
         gbc.gridy = 0;
         gbc.weightx = 1.0;
         gbc.weighty = 0.8;
+        gbc.anchor = GridBagConstraints.FIRST_LINE_START;
         pan_center_left.add(jta_clientlog, gbc);
 
         gbc.gridx = 0;
@@ -176,7 +178,7 @@ public class ClientGUI extends BenPanel implements ActionListener {
         gbc.gridy = 1;
         gbc.weighty = 0.5;
         gbc.weightx = 1.0;
-        gbc.anchor = GridBagConstraints.FIRST_LINE_START;
+        gbc.anchor = GridBagConstraints.CENTER;
         pan_center.add(pan_center_right, gbc);
         pan_center_right.setLayout(gbl);
 
@@ -207,21 +209,22 @@ public class ClientGUI extends BenPanel implements ActionListener {
     public void addLog(String add){
 
         String was = jta_clientlog.getText();
-        jta_clientlog.setText(was += add + "\n");
+        jta_clientlog.setText(was + (add + "\n"));
+        jta_clientlog.setCaretPosition(jta_clientlog.getText().length());
     }
     public void clearCommandLine(){
         txt_commandline.setText("");
     }
     private void createChatGUI(String name){
 
-        pan_chat = new JPanel();
+        JPanel pan_chat = new JPanel();
         setDefaultMasterPanelStyle(pan_chat, "  CHAT WITH: " + name + "  ");
         pan_chat.setLayout(gbl);
 
         cmd_inv = new JButton(" INVITE ");
         setDefaultButtonStyle(cmd_inv);
 
-        jta_chatlog = new TextArea();
+        jta_chatlog = new TextArea("",10, 1,TextArea.SCROLLBARS_VERTICAL_ONLY);
         setDefaultTextAreaStyle(jta_chatlog);
 
         resetGridBagConstraints(gbc);
@@ -246,29 +249,20 @@ public class ClientGUI extends BenPanel implements ActionListener {
 
         if(!chats.isCreated(transmitter) && !selfdisplayed){
 
-            //Chat Window has not been created on this GUI -> displaying a
-            //message from transmitter to this receiver GUI
-            //tab name -> transmitter != id
             createChatGUI(transmitter);
             chats.addChatGUI(new ChatPanel(cmd_inv, jta_chatlog), transmitter);
-            System.out.println("CLient : " + id + "| chats with: ->" + chats.getS().toString());
+            System.out.println("Client : " + id + "| chats with: ->" + chats.getS().toString());
             chats.addNotSelfDisplayedMessage(transmitter, message);
 
         } else if (!chats.isCreated(receiver) && selfdisplayed){
 
-            //Chat Window has not been created on this GUI -> displaying this
-            //users written message on his GUI
-            //tab name -> id -> transmitter
             createChatGUI(receiver);
             chats.addChatGUI(new ChatPanel(cmd_inv, jta_chatlog), receiver);
-            System.out.println("CLient : " + id + "| chats with: ->" + chats.getS().toString());
+            System.out.println("Client : " + id + "| chats with: ->" + chats.getS().toString());
             chats.addSelfDisplayedMessage(transmitter, message, receiver);
 
         } else if (chats.isCreated(receiver) && selfdisplayed) {
 
-            //Chat Window has been created
-            //Displaying a message that has been sent from someone else...
-            //tab name -> transmitter
             for (String s : chats.getS()) {
 
                 if (s.equals(receiver)) {
@@ -278,9 +272,6 @@ public class ClientGUI extends BenPanel implements ActionListener {
             }
         } else if (chats.isCreated(transmitter) && !selfdisplayed) {
 
-            //Chat Window has been created
-            //Displaying a message that has been sent from someone else...
-            //tab name -> transmitter
             for (String s : chats.getS()) {
 
                 if (s.equals(transmitter)) {
@@ -295,7 +286,7 @@ public class ClientGUI extends BenPanel implements ActionListener {
     @Override
     public void init() {
 
-        chats = new ChatInfrastructure<String, ChatPanel>();
+        chats = new ChatInfrastructure<>();
         setFocusable(true);
         requestFocus();
 

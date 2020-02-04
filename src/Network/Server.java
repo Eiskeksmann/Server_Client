@@ -2,7 +2,6 @@ package Network;
 
 import Graphics.GWindow;
 import Graphics.ServerGUI;
-import Graphics.Window;
 import Numbers.Login;
 
 import java.io.*;
@@ -12,7 +11,6 @@ import java.net.*;
 // Network.Server class
 public class Server
 {
-    private GWindow gui;
     private ServerGUI server_gui;
     private Vector<ClientHandler> ar;
 
@@ -20,7 +18,7 @@ public class Server
 
         ar = new Vector<>();
         server_gui = new ServerGUI();
-        gui = new GWindow<ServerGUI>(server_gui);
+        new GWindow<ServerGUI>(server_gui);
     }
 
     public Vector<ClientHandler> getAr(){
@@ -44,14 +42,13 @@ public class Server
         ServerSocket ss = new ServerSocket(40000);
 
         Socket s;
-        Scanner scan = new Scanner(System.in);
 
         ll.add(new Login( "admin", "admin"));
         ll.add(new Login("testid", "testpw"));
         ll.add(new Login("user","password"));
         // running infinite loop for getting
-
         // client request
+
         while (true)
         {
 
@@ -68,7 +65,7 @@ public class Server
                 System.out.println("Creating a new handler for this client...");
 
                 // Create a new handler object for handling this request.
-                ClientHandler mtch = new ClientHandler(s, i, dis, dos, server);
+                ClientHandler mtch = new ClientHandler(i, dis, dos, server);
 
                 // Create a new Thread with this object.
                 Thread t = new Thread(mtch);
@@ -88,6 +85,8 @@ public class Server
 
             }catch(IOException e){
 
+                System.out.println("ERROR");
+                break;
             }
         }
     }

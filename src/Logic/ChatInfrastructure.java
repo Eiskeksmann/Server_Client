@@ -13,23 +13,10 @@ public class ChatInfrastructure <S extends String, J extends ChatPanel>{
         panels = new ArrayList<>();
     }
 
-    public J getJPanelAt(int i) {
-        return panels.get(i);
-    }
-    public S getNameAt(int i) {
-        return names.get(i);
-    }
-
     public ArrayList<S> getS(){ return names; }
-    public int getIndexOfGUI(String name){
-
-        return names.indexOf(name);
-    }
     public boolean isCreated(String name){
 
-        if(names.contains(name)){
-            return true;
-        }else return false;
+        return names.contains(name);
     }
     public void addChatGUI(J j, S s){
 
@@ -42,6 +29,6 @@ public class ChatInfrastructure <S extends String, J extends ChatPanel>{
     }
     public void addSelfDisplayedMessage(String transmitter, String message, String receiver){
 
-        panels.get(names.indexOf(receiver)).setChat(transmitter, message);
+            panels.get(names.indexOf(receiver)).setChat(transmitter, message);
     }
 }

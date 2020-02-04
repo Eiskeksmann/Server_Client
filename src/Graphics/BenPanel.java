@@ -1,6 +1,7 @@
 package Graphics;
 
 import Numbers.Constants;
+import util.Cmd;
 
 import javax.swing.*;
 import javax.swing.border.LineBorder;
@@ -44,6 +45,11 @@ public abstract class BenPanel extends JPanel{
 
         tf.setFont(FONT_CASUAL);
         tf.setForeground(COL_DARKISHBLUE);
+    }
+    protected void setDefaultCmdStyle(Cmd cmd){
+
+        cmd.setFont(FONT_CASUAL);
+        cmd.setForeground(COL_DARKISHBLUE);
     }
     protected void setDefaultListStyle(List l){
 
@@ -96,6 +102,5 @@ public abstract class BenPanel extends JPanel{
         g.gridheight = 1;
         g.gridwidth = 1;
     }
-
 
 }

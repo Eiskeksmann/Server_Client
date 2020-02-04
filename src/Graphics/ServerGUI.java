@@ -1,9 +1,6 @@
 package Graphics;
 
-import com.sun.imageio.plugins.gif.GIFImageReader;
-
 import javax.swing.*;
-import javax.swing.border.Border;
 import java.awt.*;
 
 public class ServerGUI extends BenPanel{
@@ -152,7 +149,7 @@ public class ServerGUI extends BenPanel{
     public void addLog(String add){
 
         String was = jta_serverlog.getText();
-        jta_serverlog.setText(was += "\n" + add);
+        jta_serverlog.setText(was + ("\n" + add));
     }
 
     @Override

@@ -1,9 +1,6 @@
 package Network;
 
-import Graphics.GWindow;
 import Graphics.ServerGUI;
-import Graphics.ServerPanel;
-import Graphics.Window;
 import Numbers.Login;
 
 import java.io.*;
@@ -17,18 +14,16 @@ class ClientHandler implements Runnable
     private final DataOutputStream dos;
     private Server server;
     private ServerGUI server_gui;
-    private Socket s;
     private boolean isloggedin;
 
     // constructor
-    public ClientHandler(Socket s, int i,
+    public ClientHandler(int i,
                          DataInputStream dis, DataOutputStream dos,
                          Server server) {
 
         this.dis = dis;
         this.dos = dos;
         this.name = Integer.toString(i);
-        this.s = s;
         this.isloggedin=false;
         this.server = server;
         this.server_gui = server.getServerGUI();
@@ -107,15 +102,14 @@ class ClientHandler implements Runnable
                                     }
                                     break;
                                 }
-                                break;
                             }
                             else{
 
                                 //Wrong Password
                                 dos.writeUTF("[SERVER]-Wrong Password - Please try again ...");
                                 isloggedin = false;
-                                break;
                             }
+                            break;
                         }
                         else if(!attempt.compareID(lo) && i == Server.ll.size() - 1){
 
@@ -180,7 +174,7 @@ class ClientHandler implements Runnable
 
                              // search for the recipient in the connected devices list.
                              // ar is the vector storing client of active users
-                             if(MsgToSend.equals(null) || recipient.equals(null)){
+                             if(MsgToSend == null || recipient == null){
 
                                  msgFailed();
                                  break;
@@ -189,14 +183,15 @@ class ClientHandler implements Runnable
                              {
                                  // if the recipient is found, write on its
                                  // output stream
-                                 if (ch.name.equals(recipient) && ch.isloggedin==true)
+                                 if (ch.name.equals(recipient) || recipient.equals("ALL") && ch.isloggedin)
                                  {
                                      server_gui.addLog("[MSG] DELIVERY SUCCESS FROM [" + this.name + "] to ["
                                              + ch.name + "]");
                                      ch.dos.writeUTF("[MSG]-" + name + ": " + MsgToSend + ":" + ch.name);
-                                     dos.writeUTF("[ME]-" + name + ": " + MsgToSend + ":" + ch.name);
+                                     if(!name.equals(ch.name)) {
+                                         dos.writeUTF("[ME]-" + name + ": " + MsgToSend + ":" + ch.name);
+                                     }
                                      dos.writeUTF("[SERVER]-Message was delivered... ");
-                                     break;
                                  }
                              }
                              break;
