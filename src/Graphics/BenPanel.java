@@ -1,7 +1,7 @@
 package Graphics;
 
 import Numbers.Constants;
-import util.Cmd;
+import Util.Cmd;
 
 import javax.swing.*;
 import javax.swing.border.LineBorder;
@@ -11,7 +11,7 @@ import java.awt.*;
 public abstract class BenPanel extends JPanel{
 
     private static final Color COL_DARKISHBLUE = new Color(18, 38, 58);
-    private static final Font FONT_CASUAL = new Font("Arial", Font.BOLD, 12);
+    private static final Font FONT_CASUAL = new Font("Arial", Font.BOLD , 12);
 
     private int res_x;
     private int res_y;
@@ -25,10 +25,6 @@ public abstract class BenPanel extends JPanel{
     public void setRes_y(int res_y){ this.res_y = res_y; }
 
     public abstract void init();
-
-    public abstract void update();
-    public abstract void input();
-    public abstract void render(Graphics g);
 
     public static Font getFONT_CASUAL(){ return FONT_CASUAL; }
     public static Color getCOL_DARKISHBLUE(){ return COL_DARKISHBLUE; }

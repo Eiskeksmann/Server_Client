@@ -1,27 +1,33 @@
 package Network;
 
-import java.awt.event.ActionListener;
 import java.io.*;
 import java.net.*;
 import java.util.Scanner;
 import java.util.StringTokenizer;
 
-import Graphics.ClientGUI;
-import Graphics.ClientPanel;
-import Graphics.GWindow;
-import Graphics.Window;
+import Graphics.*;
+import Logic.Spieler;
+import Logic.VierGewinnt;
+import Util.Location;
 
 public class Client
 {
     private GWindow gui;
     private ClientGUI client_gui;
+    private GameGUI game_gui;
     private String id;
+    private GWindow<GameGUI> game_window;
 
     public GWindow<ClientGUI> getGUI(){ return gui; }
     public ClientGUI getClientGUI(){ return client_gui; }
+    public GameGUI getGame_gui(){ return game_gui; }
     public String getId(){ return id; }
 
     public void setId(String set){ id = set; }
+    public void setGame_gui(GameGUI set){
+        game_gui = set;
+        game_window = new GWindow<>(game_gui);
+    }
 
     public Client(){
 
@@ -117,6 +123,107 @@ public class Client
                                 String rec = t.nextToken();
                                 client_gui.transmittMessage(trans, mes, rec, true);
                                 break;
+                            case("[HOST]"):
+                                //val-> V|opponent
+                                StringTokenizer s = new StringTokenizer(val, "|");
+                                String gametype = s.nextToken();
+                                String player = s.nextToken();
+                                if(gametype.equals("V")) {
+
+                                    client.setGame_gui(new VierGewinntGUI(
+                                            new Spieler(client.getId(),false),
+                                            new Spieler(player,false)));
+                                    client.getGame_gui().startGame();
+                                    client_gui.addLog("Your Turn-Make your Turn with: \n" +
+                                            "VTURN / FTURN");
+
+                                } else if(gametype.equals("F")) {
+
+                                    client.setGame_gui(new FutternGUI(
+                                            new Spieler(client.getId(),false),
+                                            new Spieler(player,false)));
+                                    client.getGame_gui().startGame();
+                                    dos.writeUTF("CREATE-"+player);
+                                }
+                                break;
+                            case("[CONNECT]"):
+                                StringTokenizer k = new StringTokenizer(val, "|");
+                                String type = k.nextToken();
+                                String host = k.nextToken();
+                                if(type.equals("V")){
+                                    client.setGame_gui(new VierGewinntGUI(
+                                            new Spieler(host,false),
+                                            new Spieler(client.getId(),false)));
+                                    client.getGame_gui().startGame();
+
+                                } else if (type.equals("F")){
+
+                                    client.setGame_gui(new FutternGUI(
+                                            new Spieler(host,false),
+                                            new Spieler(client.getId(),false)));
+                                    client.getGame_gui().startGame();
+                                }
+                                break;
+                            case("[OWNVTURN]"):
+                                if(client.getGame_gui().getHostId().equals(client.getId())){
+                                    //i am the host --> player 1
+                                    client.getGame_gui().setSp1Turn(
+                                            new Location(Integer.parseInt(val),0));
+                                    client_gui.addLog("Enemys Turn now - wait for his VTURN");
+
+                                }else {
+                                    //i am not the host --> player 2
+                                    client.getGame_gui().setSp2Turn(
+                                            new Location(Integer.parseInt(val),0));
+                                    client_gui.addLog("Enemys Turn now - wait for his VTURN");
+                                }
+                                break;
+                            case("[OWNFTURN]"):
+                                StringTokenizer z = new StringTokenizer(val, "|");
+                                int fturnvalx = Integer.parseInt(z.nextToken());
+                                int fturnvaly = Integer.parseInt(z.nextToken());
+
+                                if(client.getGame_gui().getHostId().equals(client.getId())){
+                                    //i am the host --> player 1
+                                    client.getGame_gui().setSp1Turn(
+                                            new Location(fturnvalx, fturnvaly));
+                                    client_gui.addLog("Enemys Turn now - wait for his FTURN");
+                                }else {
+                                    //i am not the host --> player 2
+                                    client.getGame_gui().setSp2Turn(
+                                            new Location(fturnvalx, fturnvaly));
+                                    client_gui.addLog("Enemys Turn now - wait for his FTURN");
+                                }
+                                break;
+                            case("[VTURN]"):
+                                if(client.getGame_gui().getHostId().equals(client.getId())){
+                                    //i am the host --> player 1
+                                    client.getGame_gui().setSp1Turn(
+                                            new Location(Integer.parseInt(val),0));
+                                    client_gui.addLog("Your Turn now - Make your Turn with VTURN");
+                                }else {
+                                    //i am not the host --> player 2
+                                    client.getGame_gui().setSp2Turn(
+                                            new Location(Integer.parseInt(val),0));
+                                    client_gui.addLog("Your Turn now - Make your Turn with VTURN");
+                                }
+                                break;
+                            case("[FTURN]"):
+                                StringTokenizer x = new StringTokenizer(val, "|");
+                                int fturnx = Integer.parseInt(x.nextToken());
+                                int fturny = Integer.parseInt(x.nextToken());
+
+                                if(client.getGame_gui().getHostId().equals(client.getId())){
+                                    //i am the host --> player 1
+                                    client.getGame_gui().setSp1Turn(
+                                            new Location(fturnx, fturny));
+                                    client_gui.addLog("Your Turn now - Make your Turn with FTURN");
+                                }else {
+                                    //i am not the host --> player 2
+                                    client.getGame_gui().setSp2Turn(
+                                            new Location(fturnx, fturny));
+                                    client_gui.addLog("Your Turn now - Make your Turn with FTURN");
+                                }
                             default:
                                 client_gui.addClientLog(msg);
                                 break;

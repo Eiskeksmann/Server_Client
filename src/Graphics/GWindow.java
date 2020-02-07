@@ -4,7 +4,7 @@ import Numbers.Constants;
 import javax.swing.*;
 import java.awt.*;
 
-public class GWindow <G extends BenPanel> extends JFrame {
+public class GWindow <G extends JPanel> extends JFrame {
 
     private String id;
     private G gui;
@@ -23,8 +23,13 @@ public class GWindow <G extends BenPanel> extends JFrame {
                 init(Constants.CLIENT_RES_X, Constants.CLIENT_RES_Y);
                 break;
 
-            case("class Graphics.GameGUI"):
-                id = "GAME";
+            case("class Graphics.VierGewinntGUI"):
+                id = "VIERGEWINNT";
+                init(Constants.GAME_RES_X, Constants.GAME_RES_Y);
+                break;
+
+            case("class Graphics.FutternGUI"):
+                id = "FUTTERN";
                 init(Constants.GAME_RES_X, Constants.GAME_RES_Y);
                 break;
         }

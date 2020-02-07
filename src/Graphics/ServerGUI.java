@@ -166,19 +166,4 @@ public class ServerGUI extends BenPanel{
         initStyle();
         initLayout();
     }
-
-    @Override
-    public void update() {
-
-    }
-
-    @Override
-    public void input() {
-
-    }
-
-    @Override
-    public void render(Graphics g) {
-
-    }
 }

@@ -2,7 +2,7 @@ package Graphics;
 
 import Logic.ChatInfrastructure;
 import Logic.ChatPanel;
-import util.Cmd;
+import Util.Cmd;
 
 import javax.swing.*;
 import java.awt.*;
@@ -282,7 +282,7 @@ public class ClientGUI extends BenPanel implements ActionListener {
         }
     }
 
-    //BenPanel (4)
+    //BenPanel (1)
     @Override
     public void init() {
 
@@ -297,21 +297,6 @@ public class ClientGUI extends BenPanel implements ActionListener {
         initComponents();
         initStyle();
         initLayout();
-    }
-
-    @Override
-    public void update() {
-
-    }
-
-    @Override
-    public void input() {
-
-    }
-
-    @Override
-    public void render(Graphics g) {
-
     }
 
     //ActionListener (1)

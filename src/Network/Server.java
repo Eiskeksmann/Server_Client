@@ -2,6 +2,7 @@ package Network;
 
 import Graphics.GWindow;
 import Graphics.ServerGUI;
+import Logic.Game;
 import Numbers.Login;
 
 import java.io.*;
@@ -13,10 +14,12 @@ public class Server
 {
     private ServerGUI server_gui;
     private Vector<ClientHandler> ar;
+    private Vector<Game> g;
 
     public Server(){
 
         ar = new Vector<>();
+        g = new Vector<>();
         server_gui = new ServerGUI();
         new GWindow<ServerGUI>(server_gui);
     }
@@ -24,6 +27,7 @@ public class Server
     public Vector<ClientHandler> getAr(){
         return ar;
     }
+    public Vector<Game> getG(){ return g; }
     public ServerGUI getServerGUI(){
         return server_gui;
     }

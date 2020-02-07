@@ -1,27 +1,18 @@
 package Graphics;
 
-import java.awt.*;
+import Util.Location;
 
-public class GameGUI extends BenPanel{
+import javax.swing.*;
+import java.io.IOException;
 
+public abstract class GameGUI extends JPanel {
 
-    @Override
-    public void init() {
+    String gametype;
 
-    }
+    public String getGametype(){ return gametype; }
 
-    @Override
-    public void update() {
-
-    }
-
-    @Override
-    public void input() {
-
-    }
-
-    @Override
-    public void render(Graphics g) {
-
-    }
+    public abstract void setSp1Turn(Location loc);
+    public abstract void setSp2Turn(Location loc);
+    public abstract void startGame()throws IOException;
+    public abstract String getHostId();
 }

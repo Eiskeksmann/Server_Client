@@ -3,9 +3,17 @@
     <words>
       <w>chatlog</w>
       <w>clientlog</w>
+      <w>futtern</w>
+      <w>gewinnt</w>
+      <w>isloggedin</w>
+      <w>mylogin</w>
       <w>selfdisplayed</w>
       <w>serverlog</w>
+      <w>spieler</w>
+      <w>successfull</w>
       <w>transmitt</w>
+      <w>vier</w>
+      <w>viergewinnt</w>
     </words>
   </dictionary>
 </component>

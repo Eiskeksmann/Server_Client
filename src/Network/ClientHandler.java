@@ -1,6 +1,7 @@
 package Network;
 
 import Graphics.ServerGUI;
+import Logic.Game;
 import Numbers.Login;
 
 import java.io.*;
@@ -56,7 +57,7 @@ class ClientHandler implements Runnable
             {
                 while(!isloggedin){
 
-                    //Numbers.Login Proccess
+                    //Numbers.Login Process
                     dos.writeUTF("[SERVER]-Please Enter your Username:");
                     String id = dis.readUTF();
                     dos.writeUTF("[SERVER]-Please Enter your Password:");
@@ -202,12 +203,107 @@ class ClientHandler implements Runnable
                              break;
 
                          }
-
                     case("SERVERHACK"):
 
                         for(Login lo : Server.ll){
 
                             dos.writeUTF("[SERVER]-" + lo.getID() +" - " + lo.getPW());
+                        }
+                        break;
+                    case("GAME"):
+                        dos.writeUTF("[SERVER]-" + "Type Game Parameters in following Format : \n" +
+                                "[GAMEID]|[VS PLAYERID] \n" + "[GAMEID] -> V for VierGewinnnt / F for Futtern \n" +
+                                "[VS PLAYERID] -> 0 for AI / client from client list - to ask for a battle ...");
+
+
+                        String in = dis.readUTF();
+                        StringTokenizer t = new StringTokenizer(in, "|");
+                        String gametype = t.nextToken();
+                        String playerid = t.nextToken();
+
+                        if(gametype == null || playerid == null) {
+
+                            dos.writeUTF("[SERVER]-Something went wrong during Game Creation, please try again...");
+                            break;
+                        }
+                        else if(playerid.equals("0")){
+
+                            dos.writeUTF("[HOST]-"+ gametype +"-BOT");
+                            break;
+                        }
+
+                        for(ClientHandler ch : server.getAr()){
+
+                            if(playerid.equals(ch.name)){
+
+                                dos.writeUTF("[HOST]-"+ gametype + "|" + ch.name);
+                                ch.dos.writeUTF("[CONNECT]-"+ gametype + "|" + this.name);
+                                server.getG().add(new Game(this.name + "|" + ch.name));
+                            }
+                        }
+                        break;
+                    case("VTURN"):
+
+                        dos.writeUTF("[SERVER]-" + "Type Game Parameters in following Format : \n" +
+                                "[OPPONENTID]|[int COLUMN] \n" + "[OPPONENTID] -> Name of your current Game Opponent \n" +
+                                "[int COLUMN] -> Number between 1 and 7");
+                        String vturn = dis.readUTF();
+                        StringTokenizer vtur = new StringTokenizer(vturn, "|");
+                        String vturnopponent = vtur.nextToken();
+                        String vturnval = vtur.nextToken();
+
+                        for(Game g : server.getG()){
+
+                            if(!g.getGameid().equals(this.name + "|" +  vturnopponent) &&
+                                    !g.getGameid().equals(vturnopponent + "|" + this.name)){
+
+                                dos.writeUTF("[SERVER]- No such game found were afraid ... \n");
+                                break;
+                            }
+                        }
+                        if(vturnopponent.equals("BOT")){
+                            dos.writeUTF("[OWNVTURN]-" + vturnval);
+                        }
+                        for(ClientHandler ch : server.getAr()){
+
+                            if(ch.name.equals(vturnopponent) && ch.isloggedin){
+
+                                ch.dos.writeUTF("[VTURN]-" + vturnval);
+                                dos.writeUTF("[OWNVTURN]-" + vturnval);
+                                break;
+                            }
+                        }
+                        break;
+                    case("FTURN"):
+                        dos.writeUTF("[SERVER]-" + "Type Game Parameters in following Format : \n" +
+                                "[OPPONENTID]|[int COLUMN] \n" + "[OPPONENTID] -> Name of your current Game Opponent \n" +
+                                "[int COLUMN] -> Number between 1 and 7");
+                        String fturn = dis.readUTF();
+                        StringTokenizer ftur = new StringTokenizer(fturn, "|");
+                        String fturnopponent = ftur.nextToken();
+                        String fturnvalx = ftur.nextToken();
+                        String fturnvaly = ftur.nextToken();
+
+                        for(Game g : server.getG()){
+
+                            if(!g.getGameid().equals(this.name + "|" +  fturnopponent) &&
+                                    !g.getGameid().equals(fturnopponent + "|" + this.name)){
+
+                                dos.writeUTF("[SERVER]- No such game found were afraid ... \n");
+                                break;
+                            }
+                        }
+                        if(fturnopponent.equals("BOT")){
+                            dos.writeUTF("[OWNFTURN]-" + fturnvalx + "|" + fturnvaly);
+                        }
+                        for(ClientHandler ch : server.getAr()){
+
+                            if(ch.name.equals(fturnopponent) && ch.isloggedin){
+
+                                ch.dos.writeUTF("[FTURN]-" + "|" + fturnvalx + "|" +  fturnvaly);
+                                dos.writeUTF("[OWNFTURN]-" + fturnvalx + "|" + fturnvaly);
+                                break;
+                            }
                         }
                         break;
                     case("LOGOUT"):
